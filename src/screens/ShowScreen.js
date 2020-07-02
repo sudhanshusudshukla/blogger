@@ -4,14 +4,11 @@ import { Context } from '../context/BlogContext';
 import { FontAwesome } from '@expo/vector-icons';
 
 const ShowScreen = ({ navigation }) => {
-    // console.log(navigation.getParam('id'));
     const { state } = useContext(Context);
 
     const blogPost = state.find(
         blogPost => blogPost.id === navigation.getParam('id')
     );
-
-    console.log(navigation.getParam('id'));
 
     return (
         <View>

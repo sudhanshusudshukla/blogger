@@ -14,6 +14,10 @@ const blogReducer = (state, action) => {
                 content: action.payload.content
             }
             ];
+        case 'edit_blogPost':
+            return state.map(blogPost => {
+                return blogPost.id === action.payload.id ? action.payload : blogPost;
+            });
         default:
             return state;
     }
@@ -22,7 +26,9 @@ const blogReducer = (state, action) => {
 const addBlogPost = (dispatch) => {
     return (title, content, callback) => {
         dispatch({ type: 'add_blogpost', payload: { title, content } });
-        callback();
+        if (callback) {
+            callback();
+        }
     };
 };
 
@@ -31,32 +37,20 @@ const deleteBlog = (dispatch) => {
         dispatch({ type: 'delete_blogPost', payload: id })
     };
 };
+const editBlogPost = (dispatch) => {
+    return (id, title, content, callback) => {
+        dispatch({
+            type: 'edit_blogPost',
+            payload: { id: id, title: title, content: content }
+        });
+        if (callback) {
+            callback();
+        }
+    };
+};
 
 export const { Context, Provider } = createDataContext(
     blogReducer,
-    { addBlogPost, deleteBlog },
+    { addBlogPost, deleteBlog, editBlogPost },
     []
 );
-
-//Not Required as we are creating Automated createDataContext
-
-
-// export const BlogProvider = ({ children }) => {
-//     // const blogPosts = [{ title: 'Blog Post #1' }, { title: 'Blog Post #2' }];
-//     //const [blogPosts, setBlogPosts] = useState([]); ->using state
-//     const [blogPosts, dispatch] = useReducer(blogReducer, []);
-
-//     //will try other way by using useReducer
-//     // const addBlogPost = () => {
-//     //     setBlogPosts([...blogPosts,
-//     //     { title: `Blog Post #${blogPosts.length + 1}` }]);
-//     // };
-//     const addBlogPost = () => {
-//             dispatch({type: 'add_blogpost'});
-//     }; 
-
-//     return <BlogContext.Provider
-//     value={{ data: blogPosts, addBlogPost }} >
-//         {children}</BlogContext.Provider>;
-// };
-//export default BlogContext;
